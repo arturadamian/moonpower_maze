@@ -6,6 +6,9 @@
 #include <SDL2_mixer/SDL_mixer.h>
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <fstream>
+
 
 using namespace std;
 
@@ -16,8 +19,11 @@ namespace EasyCG
     extern int SCREEN_HEIGHT;
     extern SDL_Window*   window;
     extern SDL_Renderer* renderer;
-
+    extern SDL_Surface* surface;
+    extern SDL_Texture* wallTexture;
+    //SDL_Renderer *gRenderer;
     
+
     struct ColorRGB
     {
       int r;
@@ -55,7 +61,7 @@ namespace EasyCG
     bool done();                //listens for QUIT event
     void end();                  // free memory
     void addMusic(const char* musicfile);
-
+    void drawBuffer(Uint32* buffer, bool swapXY = false);       // Draws an array of (w * h) pixel data to the screen
     inline unsigned long getTicks() { return SDL_GetTicks(); }  // milliseconds since SDL was initialised
     inline double getTime() { return SDL_GetTicks() / 1000.0; } // seconds since SDL was initialised
 
@@ -64,8 +70,12 @@ namespace EasyCG
     ////////////////////////////////////////////////////////////////////////////////
     //Textures/////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
-    
+    SDL_Texture* cropTexture (SDL_Texture* src, int x, int y); // crop texture
     SDL_Texture* loadTexture(const char* texture);   //load texture
+    SDL_Texture* loadImage(vector<Uint32> gridNumber, unsigned long tw, unsigned long th, const char* texture);
+    SDL_Surface* loadSurface (const char * file);
+    SDL_Texture* LoadTexture(const char* file);
+    void loadFile(vector<unsigned char>& buffer, const char* filename);
     //SDL_Surface* loadSurface (const char * file);
 
 }
