@@ -8,6 +8,7 @@ namespace EasyCG
     bool isRunning;
     SDL_Window*  window;
     SDL_Renderer* renderer;
+    SDL_Texture* scr; // used in drawBuffer()
 
     const Uint8* inkeys;
     SDL_Event event = {0};
@@ -71,9 +72,20 @@ namespace EasyCG
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
                 cout << "Renderer created!" << endl;
             }
+            
+            //SDL_Renderer *gRenderer = SDL_GetRenderer(window);
+            
+            
+            //surface = SDL_GetWindowSurface(window);
+            //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+            
+           // wallTexture = SDL_CreateTexture(renderer, surface->format->format, SDL_TEXTUREACCESS_TARGET, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-            SDL_Surface* surface = SDL_GetWindowSurface(window);
-            SDL_Texture* floorTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, 1, SCREEN_HEIGHT);
+            
+            
+            
+
+            //SDL_Texture* floorTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, 1, SCREEN_HEIGHT);
     //        SDL_Texture* ceilTexture = SDL_CreateTexture(renderer, surface->format->format, SDL_TEXTUREACCESS_STREAMING, 1, SCREEN_HEIGHT);
             
             
@@ -91,19 +103,18 @@ namespace EasyCG
      
             SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, srf_floor);*/
             
-            SDL_Texture* texture = loadTexture("dependencies/images/snow.png");
+            /*SDL_Texture* texture = loadTexture("dependencies/images/snow.png");
             
             
             SDL_Rect texture_rect;
             texture_rect.x = 1;  //the x coordinate
             texture_rect.y = 1; // the y coordinate
             texture_rect.w = 64; //the width of the texture
-            texture_rect.h = 64; //the height of the texture*/
+            texture_rect.h = 64; //the height of the texture
             
             SDL_RenderClear(renderer);
             SDL_RenderCopy(renderer, texture, NULL, &texture_rect);
-            SDL_RenderPresent(renderer); //updates the renderer
-
+            SDL_RenderPresent(renderer); //updates the renderer*/
             // get window surface
     /*        gSurface = SDL_GetWindowSurface(window);
             if (gSurface)
@@ -133,6 +144,8 @@ namespace EasyCG
         }
         //else
          //   isRunning = false;
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); //this is white
+        scr = SDL_CreateTexture(renderer, SDL_GetWindowPixelFormat(window), 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         addMusic("dependencies/audio/spooky.mp3");
 
     }
@@ -196,6 +209,16 @@ namespace EasyCG
     //Texture/////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
 
+    SDL_Texture* cropTexture (SDL_Texture* src, int x, int y)
+    {
+        SDL_Texture* dst = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 64, 64);
+        SDL_Rect rect = {64 * x, 64 * y, 64, 64};
+        SDL_SetRenderTarget(renderer, dst);
+        SDL_RenderCopy(renderer, src, &rect, NULL);
+        SDL_SetRenderTarget(renderer, NULL);
+        
+        return dst;
+    }
     
     SDL_Texture* loadTexture(const char* texture)
     {
@@ -206,6 +229,89 @@ namespace EasyCG
         
         return tex;
     }
+
+    /**
+     * loadSurface - load surface
+     *
+     * @file: texture image
+     * Return: converted surface prepped for texturing
+     */
+    SDL_Surface* loadSurface (const char * file)
+    {
+        SDL_RWops* rwop = SDL_RWFromFile(file, "rb"); //create RWops object from file, pointers to memory, load texture file
+        SDL_Surface* loaded = IMG_LoadPNG_RW(rwop);
+        SDL_Surface* conv = NULL;
+        if (loaded)
+        {
+            conv = SDL_ConvertSurface(loaded, 0, 0);
+            SDL_FreeSurface(loaded);
+        }
+        return conv;
+    }
+    
+    
+
+    /*SDL_Texture* loadImage(int gridNumber, unsigned long tw, unsigned long th, const char* texture)
+    {
+        SDL_Surface* tmpSurface = IMG_Load(texture);
+        SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
+        SDL_FreeSurface(tmpSurface);
+        
+        
+    }*/
+    
+    /*remove later*/
+    SDL_Texture* LoadTexture(const char* file)
+    {
+        SDL_Texture* newTexture = NULL;
+        
+        SDL_Surface* loadedSurface = IMG_Load(file);
+        
+        if (loadedSurface == NULL)
+            printf("Unable to load the image %s! SDL_image Error: %s\n", file, IMG_GetError());
+        else
+        {
+            newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+            
+            if (newTexture == NULL)
+                printf("Unable to create the texture from %s! SDL Error: %s\n", file, SDL_GetError());
+            
+            SDL_FreeSurface(loadedSurface);
+        }
+        
+        return newTexture;
+    }
+
+    //Draws a buffer of pixels to the screen
+    //The number of elements in the buffer must equal the number of pixels on screen (width * height)
+    void drawBuffer(Uint32* buffer, bool swapXY)
+    {
+        if( swapXY )
+        {
+            // copy the entire buffer straight into the texture
+            SDL_UpdateTexture(scr, NULL, buffer, SCREEN_WIDTH * sizeof(Uint32));
+        }
+        else
+        {
+            for( int x = 0; x < SCREEN_WIDTH; ++x )
+            {
+                // the verticle line to be update on the target texture
+                SDL_Rect vStripe;
+                vStripe.x = x;
+                vStripe.y = 0;
+                vStripe.w = 1;
+                vStripe.h = SCREEN_HEIGHT;
+                
+                // things get a bit tricksy here, i'm telling sdl the buffer is only 1 pixel wide
+                SDL_UpdateTexture(scr, &vStripe, buffer, sizeof(Uint32));
+                // then incrementing the buffer pointer to the next line of the beffer i.e. the next vStripe in the texture
+                buffer += SCREEN_HEIGHT;
+            }
+        }
+        // draw the entire texture to the screen
+        SDL_RenderCopy(renderer, scr, NULL, NULL);
+    }
+    
 
     void addMusic(const char* musicfile)
     {
