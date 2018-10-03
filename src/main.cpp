@@ -1,6 +1,6 @@
 #include "../headers/easycg.h"
 using namespace EasyCG;
-
+ 
 #define mapWidth 24   //define constants for static array dimensions, otherwise error
 #define mapHeight 24
 #define texWidth 64
