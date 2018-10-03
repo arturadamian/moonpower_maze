@@ -51,7 +51,6 @@
 		E5A5250F2163F7420074FBF5 /* wood.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = wood.png; path = "../../../pics 2/wood.png"; sourceTree = "<group>"; };
 		E5A525102163F7420074FBF5 /* colorstone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = colorstone.png; path = "../../../pics 2/colorstone.png"; sourceTree = "<group>"; };
 		E5A525112163F7420074FBF5 /* bluestone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bluestone.png; path = "../../../pics 2/bluestone.png"; sourceTree = "<group>"; };
-		E5A5257D21641D190074FBF5 /* tile41.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tile41.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,7 +75,6 @@
 				E5A524ED21635A510074FBF5 /* headers */,
 				E5A524E4216313A50074FBF5 /* dependencies */,
 				E5A524182161B9B40074FBF5 /* Products */,
-				E5A5257D21641D190074FBF5 /* tile41.png */,
 				E5A524212161B9D80074FBF5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
