@@ -9,17 +9,15 @@
 #include <vector>
 #include <fstream>
 
-#define mapWidth 24   //define constants for static array dimensions, otherwise error
+#define mapWidth 24   //define constants for map dimensions, otherwise error
 #define mapHeight 24
 #define texWidth 64
 #define texHeight 64
-#define texSize 64
 
 using namespace std;
 
 int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
-
 
 SDL_Window*  window;
 SDL_Renderer* renderer;
@@ -30,9 +28,9 @@ vector<Uint32> textures[8];
 const Uint8* inkeys;
 SDL_Event event = {0};
 
-double posX = 20, posY = 10;  //x and y start position
+double posX = 20, posY = 10;  //player x and y start position
 double dirX = -1, dirY = 0; //initial direction vector
-double planeX = 0, planeY = 0.66; //the 2d raycaster version of camera plane
+double planeX = 0, planeY = 0.66; //camera plane
 
 int worldMap[mapWidth][mapHeight];
 
@@ -89,22 +87,21 @@ static const ColorRGB RGB_Teal     (  0, 128, 128);
 static const ColorRGB RGB_Purple   (128,   0, 128);
 static const ColorRGB RGB_Olive    (128, 128,   0);
 
-void screen(const char* title, int width, int height); //initialize screen
-void redraw();                                              // updates display
-void clearScreen(const ColorRGB& color = RGB_Black);        // clears screen to black
-bool keyDown(SDL_Scancode key);     // checks if key is pressed
-void readKeys();             // gets current keyboard input state
-bool done();                //listens for QUIT event
-void end();                  // free memory
+void init(const char* title, int width, int height);
+void redraw();
+void clearScreen(const ColorRGB& color = RGB_Black);     //clears screen to black by default
+bool keyDown(SDL_Scancode key);
+void readKeys();
+bool quit();
+void close();
 void addMusic(const char* musicfile);
-void drawBuffer(Uint32* buffer, bool swapXY = false);       // Draws an array of (w * h) pixel data to the screen
-inline unsigned long getTicks() { return SDL_GetTicks(); }  // milliseconds since SDL was initialised
-inline double getTime() { return SDL_GetTicks() / 1000.0; } // seconds since SDL was initialised
-void verLine(int x, int y1, int y2, const ColorRGB& color); // draws a verticle line
-SDL_Texture* cropTexture (SDL_Texture* src, int x, int y); // crop texture
-SDL_Texture* loadTexture(const char* texture);   //load texture
-SDL_Surface* loadSurface (const char * file);
-void drawRect(int x1, int y1, int x2, int y2, const ColorRGB& color);
-
-
+void drawBuffer(Uint32* buffer, bool swapXY = false); // draws an array of (w * h) pixel data to the screen
+void verLine(int x, int y1, int y2, const ColorRGB& color);
+SDL_Texture* loadTexture(const char* texture);
+void loadBackground(SDL_Texture *src, int x, int y);
+void generateTextures();
+void parseMap(int worldMap[mapWidth][mapHeight]);
+void movePlayer(double frameTime);
+void drawTextureWalls();
+void drawColorWalls();
 #endif /*__MAZE_H__*/

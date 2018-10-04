@@ -1,9 +1,8 @@
 #include "../headers/maze.h"
 
+//parse map
 void parseMap(int worldMap[mapWidth][mapHeight])
 {
-    using namespace std;
-    
     ifstream inputFile("maps/map.txt");
     if (inputFile.is_open())
     {

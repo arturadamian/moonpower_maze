@@ -1,16 +1,6 @@
 #include "../headers/maze.h"
 
-SDL_Texture* cropTexture (SDL_Texture* src, int x, int y)
-{
-    SDL_Texture* dst = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 64, 64);
-    SDL_Rect rect = {64 * x, 64 * y, 64, 64};
-    SDL_SetRenderTarget(renderer, dst);
-    SDL_RenderCopy(renderer, src, nullptr, &rect);
-    SDL_SetRenderTarget(renderer, NULL);
-    
-    return dst;
-}
-
+//load texture
 SDL_Texture* loadTexture(const char* texture)
 {
     SDL_Surface* tmpSurface = IMG_Load(texture);
@@ -21,22 +11,7 @@ SDL_Texture* loadTexture(const char* texture)
     return tex;
 }
 
-
-SDL_Surface* loadSurface (const char * file)
-{
-    SDL_RWops* rwop = SDL_RWFromFile(file, "rb"); //create RWops object from file, pointers to memory, load texture file
-    SDL_Surface* loaded = IMG_LoadPNG_RW(rwop);
-    SDL_Surface* conv = NULL;
-    if (loaded)
-    {
-        conv = SDL_ConvertSurface(loaded, 0, 0);
-        SDL_FreeSurface(loaded);
-    }
-    return conv;
-}
-
-//Draws a buffer of pixels to the screen
-//The number of elements in the buffer equals number of pixels on screen (width * height)
+//draw buffer of pixels to screen where size = # pixels on screen (SCREEN_WIDTH * SCREEN_HEIGHT)
 void drawBuffer(Uint32* buffer, bool swapXY)
 {
     if( swapXY )
@@ -65,6 +40,7 @@ void drawBuffer(Uint32* buffer, bool swapXY)
     SDL_RenderCopy(renderer, scr, NULL, NULL);
 }
 
+//make textures from colors
 void generateTextures()
 {
     for(int i = 0; i < 8; i++)
@@ -85,7 +61,22 @@ void generateTextures()
             textures[5][texWidth * y + x] = 65536 * 192 * (x % 16 && y % 16); //red bricks
             textures[6][texWidth * y + x] = 65536 * ycolor; //red gradient
             textures[7][texWidth * y + x] = 128 + 256 * 128 + 65536 * 128; //flat grey texture
+            
         }
     }
+    ceilTexture = loadTexture("dependencies/images/aoa2.png");
 }
 
+//load background image
+void loadBackground(SDL_Texture *src, int x, int y)
+{
+    SDL_Rect dest;
+    dest.x = x;
+    dest.y = y;
+    dest.w = 1200;
+    dest.h= 600;
+    
+    clearScreen();
+    SDL_RenderCopy(renderer, src, NULL, &dest);
+    //redraw();
+}
