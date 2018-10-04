@@ -8,6 +8,7 @@
 #include <cmath>
 #include <vector>
 #include <fstream>
+
 #define mapWidth 24   //define constants for static array dimensions, otherwise error
 #define mapHeight 24
 #define texWidth 64
@@ -19,10 +20,13 @@ using namespace std;
 int SCREEN_WIDTH;
 int SCREEN_HEIGHT;
 
+
 SDL_Window*  window;
 SDL_Renderer* renderer;
 SDL_Texture* scr; // used in drawBuffer()
-
+SDL_Texture* ceilTexture;
+SDL_Texture* texture;
+vector<Uint32> textures[8];
 const Uint8* inkeys;
 SDL_Event event = {0};
 
@@ -99,10 +103,8 @@ inline double getTime() { return SDL_GetTicks() / 1000.0; } // seconds since SDL
 void verLine(int x, int y1, int y2, const ColorRGB& color); // draws a verticle line
 SDL_Texture* cropTexture (SDL_Texture* src, int x, int y); // crop texture
 SDL_Texture* loadTexture(const char* texture);   //load texture
-//SDL_Texture* loadImage(vector<Uint32> gridNumber, unsigned long tw, unsigned long th, const char* texture);
 SDL_Surface* loadSurface (const char * file);
-SDL_Texture* LoadTexture(const char* file);
-void loadFile(vector<unsigned char>& buffer, const char* filename);
 void drawRect(int x1, int y1, int x2, int y2, const ColorRGB& color);
+
 
 #endif /*__MAZE_H__*/
