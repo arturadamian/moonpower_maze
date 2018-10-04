@@ -95,15 +95,12 @@ void movePlayer(double frameTime)
         planeX = planeX * cos(rotSpeed) - planeY * sin(rotSpeed);
         planeY = oldPlaneX * sin(rotSpeed) + planeY * cos(rotSpeed);
     }
-    if (keyDown(SDL_SCANCODE_SPACE))
+    if (keyDown(SDL_SCANCODE_MINUS))
     {
-	    if(Mix_PausedMusic())
-	    {
-		    Mix_ResumeMusic();
-	    }
-            else
-	    {
-		    Mix_PauseMusic();
-	    }
+            Mix_PauseMusic();
+    }
+    if (keyDown(SDL_SCANCODE_EQUALS))
+    {
+            Mix_ResumeMusic();
     }
 }
