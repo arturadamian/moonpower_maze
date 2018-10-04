@@ -31,8 +31,11 @@ SDL_Event event = {0};
 double posX = 20, posY = 10;  //player x and y start position
 double dirX = -1, dirY = 0; //initial direction vector
 double planeX = 0, planeY = 0.66; //camera plane
+int exX = 5, exY = 8;
+int switch_map = 0;
 
 int worldMap[mapWidth][mapHeight];
+int world2Map[mapWidth][mapHeight];
 
 struct ColorRGB
 {

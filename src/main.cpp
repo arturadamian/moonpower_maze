@@ -17,7 +17,7 @@
 int main(void)
 {
     init("Attack on Arturs", 1200, 600);
-    parseMap(worldMap);
+    parseMap(worldMap, world2Map);
     
     double time = 0; //current frame time
     double oldTime = 0; //previous frame time

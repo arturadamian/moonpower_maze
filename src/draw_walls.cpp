@@ -72,7 +72,12 @@ void drawTextureWalls()
                 side = 1;
             }
             //Check if ray has hit a wall
-            if (worldMap[mapX][mapY] > 0) hit = 1;
+            
+            if (switch_map == 0) {
+                if (worldMap[mapX][mapY] > 0) hit = 1;
+            } else {
+                if (world2Map[mapX][mapY] > 0) hit = 1;
+            }
         }
         //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
         if (side == 0) perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
@@ -90,8 +95,11 @@ void drawTextureWalls()
             drawEnd = SCREEN_HEIGHT - 1;
         
         //texturing calculations
-        int texNum = worldMap[mapX][mapY] + 2; //1 subtracted from it so that texture 0 can be used!
-        
+        int texNum = 0;
+        if (switch_map == 0)
+            texNum = worldMap[mapX][mapY] + 2; //1 subtracted from it so that texture 0 can be used!
+        else
+            texNum = world2Map[mapX][mapY];
         //calculate value of wallX
         double wallX; //where exactly the wall was hit
         if (side == 0)
@@ -248,7 +256,11 @@ void drawColorWalls()
                 side = 1;
             }
             //Check if ray has hit a wall
-            if (worldMap[mapX][mapY] > 0) hit = 1;
+            if (switch_map == 0) {
+                if (worldMap[mapX][mapY] > 0) hit = 1;
+            } else {
+                if (world2Map[mapX][mapY] > 0) hit = 1;
+            }
         }
         //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
         if (side == 0) perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
@@ -265,14 +277,27 @@ void drawColorWalls()
         
         //choose wall color
         ColorRGB color;
-        switch(worldMap[mapX][mapY])
+        if (switch_map == 0)
         {
-            case 1:  color = RGB_Red;  break; //red
-            case 2:  color = RGB_Green;  break; //green
-            case 3:  color = RGB_Blue;   break; //blue
-            case 4:  color = RGB_White;  break; //white
-            default: color = RGB_Yellow; break; //yellow
-                
+            switch(worldMap[mapX][mapY])
+            {
+                case 1:  color = RGB_Red;  break; //red
+                case 2:  color = RGB_Green;  break; //green
+                case 3:  color = RGB_Blue;   break; //blue
+                case 4:  color = RGB_White;  break; //white
+                default: color = RGB_Yellow; break; //yellow
+            }
+        }
+        else
+        {
+            switch(world2Map[mapX][mapY])
+            {
+                case 1:  color = RGB_Red;  break; //red
+                case 2:  color = RGB_Green;  break; //green
+                case 3:  color = RGB_Blue;   break; //blue
+                case 4:  color = RGB_White;  break; //white
+                default: color = RGB_Yellow; break; //yellow
+            }
         }
          
         //give x and y sides different brightness

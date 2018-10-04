@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3E0A895D2166D69300058FF5 /* map2.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = map2.txt; sourceTree = "<group>"; };
 		E5A524172161B9B40074FBF5 /* cg_maze */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = cg_maze; sourceTree = BUILT_PRODUCTS_DIR; };
 		E5A5241A2161B9B40074FBF5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		E5A524242161B9ED0074FBF5 /* SDL2_mixer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDL2_mixer.framework; path = ../../../../Library/Frameworks/SDL2_mixer.framework; sourceTree = "<group>"; };
@@ -101,8 +102,8 @@
 				E5A525C121652D290074FBF5 /* handle_input.cpp */,
 				E5A525C521652D990074FBF5 /* draw.cpp */,
 				E5A525CB21652F440074FBF5 /* draw_walls.cpp */,
-				E5A525C921652E120074FBF5 /* effects.cpp */,
 				E5A525CD216533EC0074FBF5 /* update_world.cpp */,
+				E5A525C921652E120074FBF5 /* effects.cpp */,
 				E5A525C321652D540074FBF5 /* close.cpp */,
 			);
 			path = src;
@@ -165,6 +166,7 @@
 		E5A525D121653F8D0074FBF5 /* maps */ = {
 			isa = PBXGroup;
 			children = (
+				3E0A895D2166D69300058FF5 /* map2.txt */,
 				E5A525D4216540D80074FBF5 /* map.txt */,
 			);
 			path = maps;
