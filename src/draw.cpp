@@ -8,10 +8,10 @@ void verLine(int x, int y1, int y2, const ColorRGB& color)
 }
 
 /**
- * draw_background - Draw the sky and floor
+ * drawBackground - Draw the sky and floor
  * @instance: An SDL_Instance containing the window and renderer objects
  **/
-void draw_background(SDL_Renderer *renderer)
+void drawBackground(SDL_Renderer *renderer)
 {
     int x;
     

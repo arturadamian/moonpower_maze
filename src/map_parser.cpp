@@ -1,6 +1,6 @@
 #include "../headers/maze.h"
 
-void create_the_world(int worldMap[mapWidth][mapHeight])
+void parseMap(int worldMap[mapWidth][mapHeight])
 {
     using namespace std;
     

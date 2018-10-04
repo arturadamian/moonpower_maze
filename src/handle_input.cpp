@@ -12,4 +12,3 @@ void readKeys()
 {
     inkeys = SDL_GetKeyboardState(NULL);
 }
-

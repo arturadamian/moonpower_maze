@@ -1,11 +1,8 @@
 #include "../headers/maze.h"
 
-/**
- * 
- *
- */
 void drawWalls()
 {
+    Uint32 buffer[SCREEN_HEIGHT][SCREEN_WIDTH];
     for(int x = 0; x < SCREEN_WIDTH; x++)
     {
         //calculate ray position and direction
@@ -90,7 +87,7 @@ void drawWalls()
         if(drawEnd >= SCREEN_HEIGHT)drawEnd = SCREEN_HEIGHT - 1;
         
         //choose wall color
-        ColorRGB color;
+        /*ColorRGB color;
         switch(worldMap[mapX][mapY])
         {
             case 1:  color = RGB_Red;  break; //red
@@ -104,7 +101,38 @@ void drawWalls()
         if (side == 1) {color = color / 2;}
         
         //draw the pixels of the stripe as a vertical line
-        verLine(x, drawStart, drawEnd, color);
+        verLine(x, drawStart, drawEnd, color);*/
+        //texturing calculations
         
+        //texturing calculations
+        int texNum = worldMap[mapX][mapY] + 2; //1 subtracted from it so that texture 0 can be used!
+        
+        //calculate value of wallX
+        double wallX; //where exactly the wall was hit
+        if (side == 0)
+            wallX = posY + perpWallDist * rayDirY;
+        else
+            wallX = posX + perpWallDist * rayDirX;
+        wallX -= (int)wallX;
+        
+        //x coordinate on the texture
+        int texX = int(wallX * double(texWidth));
+        if(side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
+        if(side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
+        
+        for(int y = drawStart; y < drawEnd; y++)
+        {
+            int d = y * 256 - SCREEN_HEIGHT * 128 + lineHeight * 128;  //256 and 128 factors to avoid floats
+            // TODO: avoid the division to speed this up
+            int texY = ((d * texHeight) / lineHeight) / 256;
+            Uint32 color = textures[texNum][texHeight * texY + texX];
+            //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+            if(side == 1) color = (color >> 1) & 8355711;
+            buffer[y][x] = color;
+        }
     }
+    drawBuffer(buffer[0], true);
+    for(int x = 0; x < SCREEN_WIDTH; x++)
+        for(int y = 0; y < SCREEN_HEIGHT; y++)
+            buffer[y][x] = 0;
 }

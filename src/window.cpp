@@ -1,7 +1,8 @@
 #include "../headers/maze.h"
 
+using namespace std;
 /**
- * screen - prep screen for SDL2 instance
+ * init - prep screen for SDL2 instance
  *
  * @title: window title
  * @width: screen width, projection plane width
@@ -9,7 +10,7 @@
  * @fullscreen: true for fullscreen, false for NO fullscreen display
  */
 
-void screen(const char* title, int width, int height)
+void init(const char* title, int width, int height)
 {
     SCREEN_WIDTH = width;
     SCREEN_HEIGHT = height;
@@ -30,20 +31,11 @@ void screen(const char* title, int width, int height)
             cout << "Renderer created!" << endl;
         }
     }
-    
+
     scr = SDL_CreateTexture(renderer, SDL_GetWindowPixelFormat(window), 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     addMusic("dependencies/audio/spooky.mp3");
-}
-
-// present what was drawn, update display
-void redraw()
-{
-    SDL_RenderPresent(renderer);
-}
-
-// prep for new render display
-void clearScreen(const ColorRGB& color)
-{
-    SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
-    SDL_RenderClear(renderer);
+    ceilTexture = loadTexture("dependencies/images/aoa2.png");
+    
+    generateTextures();
+    
 }

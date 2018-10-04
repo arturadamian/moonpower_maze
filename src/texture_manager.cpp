@@ -35,34 +35,8 @@ SDL_Surface* loadSurface (const char * file)
     return conv;
 }
 
-
-
-
-
-/*remove later*/
-SDL_Texture* LoadTexture(const char* file)
-{
-    SDL_Texture* newTexture = NULL;
-    
-    SDL_Surface* loadedSurface = IMG_Load(file);
-    
-    if (loadedSurface == NULL)
-        printf("Unable to load the image %s! SDL_image Error: %s\n", file, IMG_GetError());
-    else
-    {
-        newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-        
-        if (newTexture == NULL)
-            printf("Unable to create the texture from %s! SDL Error: %s\n", file, SDL_GetError());
-        
-        SDL_FreeSurface(loadedSurface);
-    }
-    
-    return newTexture;
-}
-
 //Draws a buffer of pixels to the screen
-//The number of elements in the buffer must equal the number of pixels on screen (width * height)
+//The number of elements in the buffer equals number of pixels on screen (width * height)
 void drawBuffer(Uint32* buffer, bool swapXY)
 {
     if( swapXY )
@@ -89,4 +63,29 @@ void drawBuffer(Uint32* buffer, bool swapXY)
     }
     // draw the entire texture to the screen
     SDL_RenderCopy(renderer, scr, NULL, NULL);
+}
+
+void generateTextures()
+{
+    for(int i = 0; i < 8; i++)
+        textures[i].resize(texWidth * texHeight);
+    
+    for(int x = 0; x < texWidth; x++)
+    {
+        for(int y = 0; y < texHeight; y++)
+        {
+            int xorcolor = (x * 256 / texWidth) ^ (y * 256 / texHeight);
+            int ycolor = y * 256 / texHeight;
+            int xycolor = y * 128 / texHeight + x * 128 / texWidth;
+            textures[0][texWidth * y + x] = 65536 * 254 * (x != y && x != texWidth - y); //flat red texture with black cross
+            textures[1][texWidth * y + x] = xycolor + 256 * xycolor + 65536 * xycolor; //sloped greyscale
+            textures[2][texWidth * y + x] = 256 * xycolor + 65536 * xycolor; //sloped yellow gradient
+            textures[3][texWidth * y + x] = xorcolor + 256 * xorcolor + 65536 * xorcolor; //xor greyscale
+            textures[4][texWidth * y + x] = 256 * xorcolor; //xor green
+            textures[5][texWidth * y + x] = 65536 * 192 * (x % 16 && y % 16); //red bricks
+            textures[6][texWidth * y + x] = 65536 * ycolor; //red gradient
+            textures[7][texWidth * y + x] = 128 + 256 * 128 + 65536 * 128; //flat grey texture
+        }
     }
+}
+

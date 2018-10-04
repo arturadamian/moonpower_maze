@@ -9,11 +9,11 @@
 #include "update_world.cpp"
 #include "map_parser.cpp"
 
- 
-int main(int argc, const char * argv[])
+
+int main(void)
 {
-    screen("Maze", 800, 600);
-    create_the_world(worldMap);
+    init("Attack on Arturs", 1200, 600);
+    parseMap(worldMap);
     
     double time = 0; //time of current frame
     double oldTime = 0; //time of previous frame
@@ -22,8 +22,8 @@ int main(int argc, const char * argv[])
     while(!done())
     {
         drawWalls();
-        redraw();
-        clearScreen();
+
+        //clearScreen();
         
         //update ticks
         oldTime = time;
@@ -31,9 +31,19 @@ int main(int argc, const char * argv[])
         double frameTime = (time - oldTime) / 1000.0; //frameTime is the time this frame has taken, in seconds
         cout << (1.0 / frameTime) << endl; //FPS counter
         
+        redraw();
         movePlayer(frameTime);
+        
+        // Clear the renderer
+        SDL_RenderClear(renderer);
+        
+        // Render the image
+        SDL_RenderCopy(renderer, ceilTexture, NULL, NULL);
+        
+        // Show the final render
+        //SDL_RenderPresent(renderer);
     }
-    end();
+    close();
     return 0;
 }
 
