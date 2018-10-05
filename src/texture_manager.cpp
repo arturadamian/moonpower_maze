@@ -1,82 +1,59 @@
-#include "../headers/maze.h"
+#include "headers/maze.h"
 
-//load texture
-SDL_Texture* loadTexture(const char* texture)
+/**
+ * loadTextures - load textures
+ */
+void loadTextures()
 {
-    SDL_Surface* tmpSurface = IMG_Load(texture);
-    SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, tmpSurface);
-    SDL_FreeSurface(tmpSurface);
-    cout << "Surface loaded!" << endl;
+    SDL_Surface *textures[numTex]; //store textures to be loaded
     
-    return tex;
-}
+    //load images
+    textures[0] = IMG_Load("dependencies/images/nightsky64.png");
+    textures[1] = IMG_Load("dependencies/images/kitty64.png");
+    textures[2] = IMG_Load("dependencies/images/artur_64.png");
+    textures[3] = IMG_Load("dependencies/images/sm_color.png");
+    textures[4] = IMG_Load("dependencies/images/mercury_color.png");
+    textures[5] = IMG_Load("dependencies/images/venus_color.png");
+    textures[6] = IMG_Load("dependencies/images/jupiter_color.png");
+    textures[7] = IMG_Load("dependencies/images/mars_color.png");
+    textures[8] = IMG_Load("dependencies/images/crystal64.png");
 
-//draw buffer of pixels to screen where size = # pixels on screen (SCREEN_WIDTH * SCREEN_HEIGHT)
-void drawBuffer(Uint32* buffer, bool swapXY)
-{
-    if( swapXY )
+    //get texture pixels and store in array
+    for (int i = 0; i < numTex; i++)
     {
-        // copy the entire buffer straight into the texture
-        SDL_UpdateTexture(scr, NULL, buffer, SCREEN_WIDTH * sizeof(Uint32));
-    }
-    else
-    {
-        for( int x = 0; x < SCREEN_WIDTH; ++x )
+        for (int j = 0; j < texHeight; j++)
         {
-            // the verticle line to be update on the target texture
-            SDL_Rect vStripe;
-            vStripe.x = x;
-            vStripe.y = 0;
-            vStripe.w = 1;
-            vStripe.h = SCREEN_HEIGHT;
-            
-            // things get a bit tricksy here, i'm telling sdl the buffer is only 1 pixel wide
-            SDL_UpdateTexture(scr, &vStripe, buffer, sizeof(Uint32));
-            // then incrementing the buffer pointer to the next line of the beffer i.e. the next vStripe in the texture
-            buffer += SCREEN_HEIGHT;
+            for (int k = 0; k < texWidth; k++)
+            {
+                //use bit manipulation to store pixel color
+                pixel = (uint8_t *)textures[i]->pixels + k * textures[i]->pitch + j * textures[i]->format->BytesPerPixel;
+                aTexture[i][j][k] = pixel[0] | pixel[1] << 8 | pixel[2] << 16;
+            }
         }
     }
+    
+    //free each texture surface in array
+    for (int i = 0; i < numTex; i++)
+    {
+        SDL_FreeSurface(textures[i]);
+        textures[i] = NULL;
+    }
+}
+
+/**
+ * drawBuffer - draw buffer of pixel data onto screen where
+ * buffersize = total # pixels on screen (SCREEN_WIDTH * SCREEN_HEIGHT)
+ *
+ * @buffer: buffer of pixel data
+ */
+
+void drawBuffer(uint32_t* buffer)
+{
+    // copy entire buffer onto screen
+    SDL_UpdateTexture(screen, NULL, buffer, SCREEN_WIDTH * sizeof(Uint32));
+    
     // draw the entire texture to the screen
-    SDL_RenderCopy(renderer, scr, NULL, NULL);
+    SDL_RenderCopy(renderer, screen, NULL, NULL);
 }
 
-//make textures from colors
-void generateTextures()
-{
-    for(int i = 0; i < 8; i++)
-        textures[i].resize(texWidth * texHeight);
-    
-    for(int x = 0; x < texWidth; x++)
-    {
-        for(int y = 0; y < texHeight; y++)
-        {
-            int xorcolor = (x * 256 / texWidth) ^ (y * 256 / texHeight);
-            int ycolor = y * 256 / texHeight;
-            int xycolor = y * 128 / texHeight + x * 128 / texWidth;
-            textures[0][texWidth * y + x] = 65536 * 254 * (x != y && x != texWidth - y); //flat red texture with black cross
-            textures[1][texWidth * y + x] = xycolor + 256 * xycolor + 65536 * xycolor; //sloped greyscale
-            textures[2][texWidth * y + x] = 256 * xycolor + 65536 * xycolor; //sloped yellow gradient
-            textures[3][texWidth * y + x] = xorcolor + 256 * xorcolor + 65536 * xorcolor; //xor greyscale
-            textures[4][texWidth * y + x] = 256 * xorcolor; //xor green
-            textures[5][texWidth * y + x] = 65536 * 192 * (x % 16 && y % 16); //red bricks
-            textures[6][texWidth * y + x] = 65536 * ycolor; //red gradient
-            textures[7][texWidth * y + x] = 128 + 256 * 128 + 65536 * 128; //flat grey texture
-            
-        }
-    }
-    ceilTexture = loadTexture("dependencies/images/aoa2.png");
-}
 
-//load background image
-void loadBackground(SDL_Texture *src, int x, int y)
-{
-    SDL_Rect dest;
-    dest.x = x;
-    dest.y = y;
-    dest.w = 1200;
-    dest.h= 600;
-    
-    clearScreen();
-    SDL_RenderCopy(renderer, src, NULL, &dest);
-    //redraw();
-}

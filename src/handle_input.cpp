@@ -1,32 +1,26 @@
-#include "../headers/maze.h"
+#include "headers/maze.h"
 
-//uses scancode to listen for keyboard input
-bool keyDown(SDL_Scancode key)
-{
-    return (inkeys[key] != 0);
-}
-
-//passes value of pressed keys to inkeys
-void readKeys()
-{
-    inkeys = SDL_GetKeyboardState(NULL);
-}
-
-//move player
+/**
+ * movePlayer - enable player to rotate and move forward/backwards
+ *
+ * @frameTime: frames per second
+ */
 void movePlayer(double frameTime)
 {
-    //modify speed
+    //modify player move and turn speed
     double moveSpeed = frameTime * 5.0; //the constant value is in squares/second
     double rotSpeed = frameTime * 3.0; //the constant value is in radians/second
-    readKeys();
     
-    //move forward if no wall in front of you
-    if (keyDown(SDL_SCANCODE_UP) || keyDown(SDL_SCANCODE_W))
+    getKeyState(); //get keyboard state
+    
+    //move forward if no wall in front
+    if (pressed(SDL_SCANCODE_UP) || pressed(SDL_SCANCODE_W))
     {
         if (int(posX) == exX && int(posY) == exY)
             switch_map = 1;
+
         //booster
-        if (keyDown(SDL_SCANCODE_LSHIFT))
+        if (pressed(SDL_SCANCODE_LSHIFT))
         {
             moveSpeed *= 2;
             rotSpeed *= 2;
@@ -47,13 +41,14 @@ void movePlayer(double frameTime)
         }
                 
     }
-    //move backwards if no wall behind you
-    if (keyDown(SDL_SCANCODE_DOWN) || keyDown(SDL_SCANCODE_S))
+    
+    //move backwards if no wall behind
+    if (pressed(SDL_SCANCODE_DOWN) || pressed(SDL_SCANCODE_S))
     {
         if (int(posX) == exX && int(posY) == exY)
             switch_map = 1;
         //booster
-        if (keyDown(SDL_SCANCODE_LSHIFT))
+        if (pressed(SDL_SCANCODE_LSHIFT))
         {
             moveSpeed *= 2;
             rotSpeed *= 2;
@@ -73,8 +68,9 @@ void movePlayer(double frameTime)
                 posY -= dirY * moveSpeed;
         }
     }
-    //rotate to the right
-    if (keyDown(SDL_SCANCODE_RIGHT) || keyDown(SDL_SCANCODE_D))
+    
+    //rotate right
+    if (pressed(SDL_SCANCODE_RIGHT) || pressed(SDL_SCANCODE_D))
     {
         //both camera direction and camera plane must be rotated
         double oldDirX = dirX;
@@ -84,8 +80,9 @@ void movePlayer(double frameTime)
         planeX = planeX * cos(-rotSpeed) - planeY * sin(-rotSpeed);
         planeY = oldPlaneX * sin(-rotSpeed) + planeY * cos(-rotSpeed);
     }
-    //rotate to the left
-    if (keyDown(SDL_SCANCODE_LEFT) || keyDown(SDL_SCANCODE_A))
+    
+    //rotate left
+    if (pressed(SDL_SCANCODE_LEFT) || pressed(SDL_SCANCODE_A))
     {
         //both camera direction and camera plane must be rotated
         double oldDirX = dirX;
@@ -95,12 +92,10 @@ void movePlayer(double frameTime)
         planeX = planeX * cos(rotSpeed) - planeY * sin(rotSpeed);
         planeY = oldPlaneX * sin(rotSpeed) + planeY * cos(rotSpeed);
     }
-    if (keyDown(SDL_SCANCODE_MINUS))
-    {
+    
+    //stop and resume music
+    if (pressed(SDL_SCANCODE_MINUS))
             Mix_PauseMusic();
-    }
-    if (keyDown(SDL_SCANCODE_EQUALS))
-    {
+    if (pressed(SDL_SCANCODE_EQUALS))
             Mix_ResumeMusic();
-    }
 }

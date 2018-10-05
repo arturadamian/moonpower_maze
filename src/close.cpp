@@ -1,18 +1,22 @@
-#include "../headers/maze.h"
+#include "headers/maze.h"
 
-// listens for 'QUIT' event or escape key by user
+/**
+ * quit - listens for 'QUIT' event or pressed 'escape' key by user
+ */
 bool quit()
 {
-    readKeys();
+    getKeyState();
     while (SDL_PollEvent(&event))
     {
-        if (event.type == SDL_QUIT || keyDown(SDL_SCANCODE_ESCAPE))
+        if (event.type == SDL_QUIT || pressed(SDL_SCANCODE_ESCAPE))
             return true;
     }
     return false;
 }
 
-// free memory
+/**
+ * close - free memory
+ */
 void close()
 {
     if (renderer)

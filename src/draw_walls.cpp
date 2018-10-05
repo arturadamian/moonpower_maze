@@ -1,21 +1,24 @@
-#include "../headers/maze.h"
+#include "headers/maze.h"
 
-// draw textured walls
-void drawTextureWalls()
+/**
+ * drawPicWalls - draw textured walls
+ */
+void drawPicWalls()
 {
-    Uint32 buffer[SCREEN_HEIGHT][SCREEN_WIDTH];
+    uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH]; //buffer for textures
+    
     for(int x = 0; x < SCREEN_WIDTH; x++)
     {
         //calculate ray position and direction
         double cameraX = 2 * x / double(SCREEN_WIDTH) - 1; //x-coordinate in camera space
-        //double rayPosX = posX;
-        //double rayPosY = posY;
+        double rayPosX = posX;
+        double rayPosY = posY;
         double rayDirX = dirX + planeX * cameraX;
         double rayDirY = dirY + planeY * cameraX;
         
         //which box of the map we're in
-        int mapX = int(posX);
-        int mapY = int(posY);
+        int mapX = int(rayPosX);
+        int mapY = int(rayPosY);
         
         //length of ray from current position to next x or y-side
         double sideDistX;
@@ -71,22 +74,28 @@ void drawTextureWalls()
                 mapY += stepY;
                 side = 1;
             }
-            //Check if ray has hit a wall
+            
+            //check if ray has hit a wall
             
             if (switch_map == 0) {
-                if (worldMap[mapX][mapY] > 0) hit = 1;
+                if (worldMap[mapX][mapY] > 0)
+                    hit = 1;
             } else {
-                if (world2Map[mapX][mapY] > 0) hit = 1;
+                if (world2Map[mapX][mapY] > 0)
+                    hit = 1;
             }
         }
-        //Calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
-        if (side == 0) perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
-        else           perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
         
-        //Calculate height of line to draw on screen
+        //calculate distance projected on camera direction (Euclidean distance will give fisheye effect!)
+        if (side == 0)
+            perpWallDist = (mapX - posX + (1 - stepX) / 2) / rayDirX;
+        else
+            perpWallDist = (mapY - posY + (1 - stepY) / 2) / rayDirY;
+        
+        //calculate height of line to draw on screen
         int lineHeight = (int)(SCREEN_HEIGHT / perpWallDist);
         
-        //calculate lowest and highest pixel to fill in current stripe
+        //calculate lowest and highest pixel to fill in current wall slice
         int drawStart = -lineHeight / 2 + SCREEN_HEIGHT / 2;
         if(drawStart < 0)
             drawStart = 0;
@@ -97,9 +106,10 @@ void drawTextureWalls()
         //texturing calculations
         int texNum = 0;
         if (switch_map == 0)
-            texNum = worldMap[mapX][mapY] + 2; //1 subtracted from it so that texture 0 can be used!
+            texNum = worldMap[mapX][mapY]; //1 subtracted from it so that texture 0 can be used!
         else
             texNum = world2Map[mapX][mapY];
+        
         //calculate value of wallX
         double wallX; //where exactly the wall was hit
         if (side == 0)
@@ -115,16 +125,23 @@ void drawTextureWalls()
         if(side == 1 && rayDirY < 0)
             texX = texWidth - texX - 1;
         
+        
         for(int y = drawStart; y < drawEnd; y++)
         {
-            int d = y * 256 - SCREEN_HEIGHT * 128 + lineHeight * 128;  //256 and 128 factors to avoid floats
-            // TODO: avoid the division to speed this up
+            int d = y * 256 - SCREEN_HEIGHT * 128 + lineHeight * 128;  //avoid floats with 256, 128 factors
+
             int texY = ((d * texHeight) / lineHeight) / 256;
-            Uint32 color = textures[texNum][texHeight * texY + texX];
+            
+            uint32_t color = aTexture[texNum][texX][texY];
+            
             //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-            if(side == 1) color = (color >> 1) & 8355711;
+            if(side == 1)
+                color = (color >> 1) & 8355711;
+            
             buffer[y][x] = color;
+            
         }
+        
         //FLOOR CASTING
         double floorXWall, floorYWall; //x, y position of the floor texel at the bottom of the wall
         
@@ -172,34 +189,35 @@ void drawTextureWalls()
             floorTexY = int(currentFloorY * texHeight) % texHeight;
             
             //floor
-            buffer[y][x] = (textures[1][texWidth * floorTexY + floorTexX] >> 1) & 8355711;
+            buffer[y][x] = aTexture[0][floorTexX][floorTexY];
             //ceiling (symmetrical!)
-            //buffer[SCREEN_HEIGHT - y][x] = textures[2][texWidth * floorTexY + floorTexX];
+            buffer[SCREEN_HEIGHT - y][x] = aTexture[0][floorTexY] [floorTexX];
         }
     }
-    drawBuffer(buffer[0], true);
+    drawBuffer(buffer[0]);
     for(int x = 0; x < SCREEN_WIDTH; x++)
         for(int y = 0; y < SCREEN_HEIGHT; y++)
             buffer[y][x] = 0;
-
 }
 
-
-//draw color walls
+/**
+ * drawColorWalls - draw flat color walls
+ */
+//remember to clearScreen() after fx call in main
 void drawColorWalls()
 {
     for(int x = 0; x < SCREEN_WIDTH; x++)
     {
         //calculate ray position and direction
         double cameraX = 2 * x / double(SCREEN_WIDTH) - 1; //x-coordinate in camera space
-        //double rayPosX = posX;
-        //double rayPosY = posY;
+        double rayPosX = posX;
+        double rayPosY = posY;
         double rayDirX = dirX + planeX * cameraX;
         double rayDirY = dirY + planeY * cameraX;
         
         //which box of the map we're in
-        int mapX = int(posX);
-        int mapY = int(posY);
+        int mapX = int(rayPosX);
+        int mapY = int(rayPosY);
         
         //length of ray from current position to next x or y-side
         double sideDistX;
@@ -299,10 +317,10 @@ void drawColorWalls()
                 default: color = RGB_Yellow; break; //yellow
             }
         }
-         
+        
         //give x and y sides different brightness
         if (side == 1) {color = color / 2;}
-         
+        
         //draw the pixels of the stripe as a vertical line
         verLine(x, drawStart, drawEnd, color);
     }

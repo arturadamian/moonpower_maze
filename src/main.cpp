@@ -1,4 +1,4 @@
-#include "../headers/maze.h"
+#include "headers/maze.h"
 #include "draw.cpp"
 #include "handle_input.cpp"
 #include "texture_manager.cpp"
@@ -16,28 +16,24 @@
  */
 int main(void)
 {
-    init("Attack on Arturs", 1200, 600);
+    init("Moonpower Maze", 1200, 600);
     parseMap(worldMap, world2Map);
     
-    double time = 0; //current frame time
-    double oldTime = 0; //previous frame time
+    double currTime = 0; //current frame time
+    double prevTime = 0; //previous frame time
     
     //game loop
     while(!quit())
     {
-        drawTextureWalls();
-        //drawColorWalls();
-        redraw();
-        //clearScreen(); // for color walls
-
+        drawPicWalls();
+        present();
+        
         //update ticks
-        oldTime = time;
-        time = SDL_GetTicks(); 
-        double frameTime = (time - oldTime) / 1000.0; //in seconds (not ms)
-        //cout << (1.0 / frameTime) << endl; //FPS counter
+        prevTime = currTime;
+        currTime = SDL_GetTicks();
+        double frameTime = (currTime - prevTime) / 1000.0; //in seconds
         
         movePlayer(frameTime);
-        loadBackground(ceilTexture, 0, 0);
     }
     close();
     return 0;

@@ -1,8 +1,28 @@
-#include "../headers/maze.h"
+#include "headers/maze.h"
 
+/**
+ * parseMap - parse map from an external file
+ *
+ * @worldMap: first map
+ * @world2Map: second map
+ */
 void parseMap(int worldMap[mapHeight][mapWidth], int world2Map[mapHeight][mapWidth])
 {
-    using namespace std;
+    ifstream inputFile("maps/map.txt");
+    
+    if (inputFile.is_open())
+    {
+        for (int a = 0; a < mapHeight; a++) {
+            for (int b = 0; b < mapWidth; b++) {
+                inputFile >> worldMap[a][b];
+            }
+        }
+    }
+    else
+    {
+        cout << "Couldn't read the map1 file" << endl;
+    }
+    inputFile.close();
     
     ifstream input2File("maps/map2.txt");
     if (input2File.is_open())
@@ -19,22 +39,4 @@ void parseMap(int worldMap[mapHeight][mapWidth], int world2Map[mapHeight][mapWid
     }
     
     input2File.close();
-    
-    ifstream inputFile("maps/map.txt");
-    
-    if (inputFile.is_open())
-    {
-        for (int a = 0; a < mapHeight; a++) {
-            for (int b = 0; b < mapWidth; b++) {
-                inputFile >> worldMap[a][b];
-            }
-        }
-    }
-    else
-    {
-        cout << "Couldn't read the map1 file" << endl;
-    }
-    inputFile.close();
 }
-
-

@@ -1,4 +1,4 @@
-#include "../headers/maze.h"
+#include "headers/maze.h"
 
 /**
  * init - prep screen for SDL2 instance
@@ -28,8 +28,8 @@ void init(const char* title, int width, int height)
             cout << "Renderer created!" << endl;
         }
     }
-    generateTextures();
-    loadBackground(ceilTexture, 0, 0);
-    scr = SDL_CreateTexture(renderer, SDL_GetWindowPixelFormat(window), 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    addMusic("dependencies/audio/spooky.mp3");
+
+    loadTextures();
+    screen = SDL_CreateTexture(renderer, SDL_GetWindowPixelFormat(window), 0, SCREEN_WIDTH, SCREEN_HEIGHT); //final buffer to place on screen
+    addMusic("dependencies/audio/sailormoon.mp3");
 }
