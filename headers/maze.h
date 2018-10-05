@@ -28,7 +28,7 @@ vector<Uint32> textures[8];
 const Uint8* inkeys;
 SDL_Event event = {0};
 
-double posX = 20, posY = 10;  //player x and y start position
+double posX = 22, posY = 4;  //player x and y start position
 double dirX = -1, dirY = 0; //initial direction vector
 double planeX = 0, planeY = 0.66; //camera plane
 int exX = 5, exY = 8;
