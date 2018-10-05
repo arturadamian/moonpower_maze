@@ -17,7 +17,7 @@
 int main(void)
 {
     init("Moonpower Maze", 1200, 600);
-    parseMap(worldMap, world2Map);
+    parseMap();
     
     double currTime = 0; //current frame time
     double prevTime = 0; //previous frame time

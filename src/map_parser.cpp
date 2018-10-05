@@ -6,7 +6,7 @@
  * @worldMap: first map
  * @world2Map: second map
  */
-void parseMap(int worldMap[mapHeight][mapWidth], int world2Map[mapHeight][mapWidth])
+void parseMap()
 {
     ifstream inputFile("maps/map.txt");
     
