@@ -35,6 +35,6 @@ Type `make` in a terminal screen or compile with
 - [ ] More Maps
 
 ### Contributors
-[Artur Adamian](https://github.com/arturadamian)
-[Becky Chen](https://github.com/bchen528)
-[Leon Cheung](https://github.com/hiddenjem245)
+* [Artur Adamian](https://github.com/arturadamian)
+* [Becky Chen](https://github.com/bchen528)
+* [Leon Cheung](https://github.com/hiddenjem245)
