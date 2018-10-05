@@ -1,6 +1,6 @@
-# The Maze
+# Moonpower Maze
 
-![logo](https://github.com/bchen528/cg_maze/blob/master/screenshots/The_Maze.png)
+![logo](https://github.com/bchen528/cg_maze/blob/master/screenshots/moonpowermaze.png)
 
 ---
 
