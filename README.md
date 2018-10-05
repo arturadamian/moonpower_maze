@@ -9,8 +9,10 @@ A maze created in SDL2 and using raycasting to render textures
 
 ### Usage
 Type `make` in a terminal screen or compile with
-> gcc main.cpp -w -Iheaders -lSDL2 -lSDL2_image -lSDL2_mixer -o the_maze
-> ./the_maze
+```
+gcc main.cpp -w -Iheaders -lSDL2 -lSDL2_image -lSDL2_mixer -o the_maze
+./the_maze
+```
 
 #### Controls
 
