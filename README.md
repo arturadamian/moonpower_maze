@@ -37,6 +37,8 @@ gcc main.cpp -w -Iheaders -lSDL2 -lSDL2_image -lSDL2_mixer -o the_maze
 - [ ] More Maps
 
 ### Contributors
-* [Artur Adamian](https://github.com/arturadamian)
 * [Becky Chen](https://github.com/bchen528)
 * [Leon Cheung](https://github.com/hiddenjem245)
+* Artur Adamian | [GitHub](https://github.com/arturadamian) | [Twitter](https://twitter.com/arturadamian) | [LinkedIn](https://www.linkedin.com/in/arturadamian/)
+
+Hi, I am Artur. I am a Software Engineer student at Holberton School where I currently study Web Development and polish my knowleges in low-level and object-oriented programming, as well as developing strong professional communication skills.
